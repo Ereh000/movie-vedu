@@ -9,7 +9,7 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export default function Index() {
+export default function Index() {   
   return (
     <>
       <div className="home__page relative pb-8">
