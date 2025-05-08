@@ -79,7 +79,7 @@ export default function MainBanner() {
   const currentBanner = bannerData[currentSlide];
 
   return (
-    <div className="relative w-full h-[98vh] overflow-hidden">
+    <div className="relative w-full h-[90vh] md:h-[98vh] overflow-hidden">
       {/* Background Image with Gradient Overlay */}
       <div
         className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
@@ -88,11 +88,11 @@ export default function MainBanner() {
           opacity: 1,
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent"></div>
       </div>
 
       {/* Content Container */}
-      <div className="relative h-full container mx-auto px-16 flex flex-col justify-center">
+      <div className="relative h-full mx-auto px-4 md:px-8 lg:px-16 flex flex-col justify-center">
         <div className="max-w-2xl">
           {/* Logo */}
           <div className="mb-4">
@@ -100,12 +100,12 @@ export default function MainBanner() {
           </div>
 
           {/* Title */}
-          <h1 className="text-6xl font-bold text-white mb-4 tracking-wider">
+          <h1 className="text-3xl lg:text-6xl font-bold text-white mb-4 tracking-wider">
             {currentBanner.title}
           </h1>
 
           {/* Info Row */}
-          <div className="flex items-center space-x-4 mb-4 text-sm text-white/80">
+          <div className="flex items-center space-x-2 md:space-x-4 mb-4 text-[12px] md:text-sm text-white/80">
             <span className="bg-red-600 text-white px-2 py-0.5 rounded">
               {currentBanner.rating}
             </span>
@@ -114,14 +114,14 @@ export default function MainBanner() {
           </div>
 
           {/* Description */}
-          <p className="text-white/90 text-lg mb-8 line-clamp-3">
+          <p className="text-white/90 text-sm md:text-md lg:text-lg mb-6 md:mb-8 line-clamp-3">
             {currentBanner.description}
           </p>
 
           {/* Action Buttons */}
           <div className="flex space-x-4">
             <Link to={`/movie/details?id=4`}>
-              <button className="bg-white text-black px-8 py-3 rounded-md flex items-center font-medium hover:bg-white/90 transition">
+              <button className="bg-white text-black flex-1 ps-3 pe-6 px-4 md:px-8 py-2 md:py-3 rounded-md flex items-center font-medium hover:bg-white/90 transition">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-5 w-5 mr-2"
@@ -137,7 +137,7 @@ export default function MainBanner() {
                 Play
               </button>
             </Link>
-            <button className="bg-gray-600/80 text-white px-8 py-3 rounded-md flex items-center font-medium hover:bg-gray-600 transition">
+            <button className="bg-gray-600/80 text-white  px-4 ps-3 md:px-8 py-2 md:py-3  rounded-md flex items-center font-medium hover:bg-gray-600 transition">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5 mr-2"
@@ -157,7 +157,7 @@ export default function MainBanner() {
       </div>
 
       {/* Slideshow Navigation */}
-      <div className="absolute bottom-8 right-8 flex items-center space-x-2">
+      <div className="absolute bottom-4 right-[50%] translate-x-16 lg:translate-x-0 lg:right-8 flex items-center space-x-2">
         <button
           onClick={goToPrevSlide}
           className="p-2 rounded-full bg-black/50 text-white hover:bg-black/70 transition"
