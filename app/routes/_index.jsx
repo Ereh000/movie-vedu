@@ -12,7 +12,7 @@ export default function Index() {
 
   return (
     <>
-      <div className="home__page backdrop-blur-sm bg-black/90 relative pb-8">
+      <div className="home__page bg-slate-900 relative pb-8">
         <section>
           <MainBanner />
           <MovieCards title="Now Playing" category="now_playing" />

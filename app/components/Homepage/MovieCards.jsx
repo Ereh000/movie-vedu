@@ -1,7 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Link } from "@remix-run/react";
 import Logo from "../../Assets/Images/vecteezy_netflix-mobile-application-logo_17396814.png";
-import { TMDB_API_KEY, TMDB_BASE_URL, TMDB_IMAGE_BASE_URL } from "../../utils/tmdb.config";
+import {
+  TMDB_API_KEY,
+  TMDB_IMAGE_BASE_URL,
+} from "../../utils/tmdb.config";
 
 export default function MovieCards({ title, category }) {
   const sliderRef = useRef(null);
@@ -11,62 +14,69 @@ export default function MovieCards({ title, category }) {
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchMovies = async () => {
+      setLoading(true);
       try {
         if (category === "now_playing") {
-          const url = 'https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1';
+          const url =
+            "https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1";
           const response = await fetch(url, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${TMDB_API_KEY}`,
             },
-          })
+          });
           const data = await response.json();
           console.log("now_playing", data);
           setMovies(data.results);
         } else if (category === "popular") {
-          const url = 'https://api.themoviedb.org/3/movie/popular?language=en-US&page=1';
+          const url =
+            "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1";
           const response = await fetch(url, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${TMDB_API_KEY}`,
             },
-          })
+          });
           const data = await response.json();
           console.log("popular", data);
           setMovies(data.results);
         } else if (category === "top_rated") {
-          const url = 'https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1';
+          const url =
+            "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1";
           const response = await fetch(url, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${TMDB_API_KEY}`,
             },
-          })
+          });
           const data = await response.json();
           console.log("data", data);
           setMovies(data.results);
         } else if (category === "up_comming") {
-          const url = 'https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1';
+          const url =
+            "https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1";
           const response = await fetch(url, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${TMDB_API_KEY}`,
             },
-          })
+          });
           const data = await response.json();
           console.log("up_comming", data);
           setMovies(data.results);
         }
-
       } catch (error) {
         console.error("Error fetching movies:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -145,7 +155,9 @@ export default function MovieCards({ title, category }) {
 
   return (
     <div className="movie-row bg-transparent relative py-10 pb-0 px-4 md:px-8 lg:px-16">
-      <h2 className="text-md md:text-[1.5rem] font-bold text-white mb-2 md:mb-4">{title}</h2>
+      <h2 className="text-md md:text-[1.5rem] font-bold text-white mb-2 md:mb-4">
+        {title}
+      </h2>
 
       <div className="relative">
         {showLeftArrow && (
@@ -173,8 +185,9 @@ export default function MovieCards({ title, category }) {
 
         <div
           ref={sliderRef}
-          className={`flex space-x-3 overflow-x-auto scrollbar-hide ${isDragging ? "cursor-grabbing" : "cursor-grab"
-            }`}
+          className={`flex space-x-3 overflow-x-auto scrollbar-hide ${
+            isDragging ? "cursor-grabbing" : "cursor-grab"
+          }`}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleDragEnd}
@@ -185,36 +198,54 @@ export default function MovieCards({ title, category }) {
           onScroll={handleScroll}
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          {movies.map((movie) => (
-            <div
-              key={movie.id}
-              className="flex-none w-[110px] md:w-[200px] relative group"
-            >
-              <Link to={`/movie/details?id=${movie.id}`} className="block">
-                <div className="relative overflow-hidden rounded-[4px] transition-transform duration-300 group-hover:shadow-xl">
-                  <img
-                    src={`${TMDB_IMAGE_BASE_URL}/w500${movie.poster_path}`}
-                    alt={movie.title}
-                    className="w-full h-auto aspect-[1/1.4] object-cover duration-300 hover:scale-110"
-                    draggable="false"
-                  />
-
-                  <div className="absolute top-2 left-2">
-                    <img
-                      src={Logo}
-                      alt="Netflix"
-                      className="h-5"
-                      draggable="false"
-                    />
+          {loading
+            ? // Skeleton loading cards
+              Array(10)
+                .fill(0)
+                .map((_, index) => (
+                  <div
+                    key={`skeleton-${index}`}
+                    className="flex-none w-[110px] md:w-[200px] relative"
+                  >
+                    <div className="relative overflow-hidden rounded-[4px] bg-gray-700 animate-pulse">
+                      <div className="w-full h-auto aspect-[1/1.4]"></div>
+                      <div className="absolute top-2 left-2">
+                        <div className="h-5 w-12 bg-gray-600 rounded"></div>
+                      </div>
+                      <div className="absolute bottom-0 left-0 bg-gray-600 h-5 w-12"></div>
+                    </div>
                   </div>
+                ))
+            : movies.map((movie) => (
+                <div
+                  key={movie.id}
+                  className="flex-none w-[110px] md:w-[200px] relative group"
+                >
+                  <Link to={`/movie/details?id=${movie.id}`} className="block">
+                    <div className="relative overflow-hidden rounded-[4px] transition-transform duration-300 group-hover:shadow-xl">
+                      <img
+                        src={`${TMDB_IMAGE_BASE_URL}/w500${movie.poster_path}`}
+                        alt={movie.title}
+                        className="w-full h-auto aspect-[1/1.4] object-cover duration-300 hover:scale-110"
+                        draggable="false"
+                      />
 
-                  <div className="absolute bottom-0 left-0 bg-red-600 text-white text-[9px] md:text-xs py-[3px] px-[6px]">
-                    {movie.vote_average.toFixed(1)} ⭐
-                  </div>
+                      <div className="absolute top-2 left-2">
+                        <img
+                          src={Logo}
+                          alt="Netflix"
+                          className="h-5"
+                          draggable="false"
+                        />
+                      </div>
+
+                      <div className="absolute bottom-0 left-0 bg-red-600 text-white text-[9px] md:text-xs py-[3px] px-[6px]">
+                        {movie.vote_average.toFixed(1)} ⭐
+                      </div>
+                    </div>
+                  </Link>
                 </div>
-              </Link>
-            </div>
-          ))}
+              ))}
         </div>
 
         {showRightArrow && (
@@ -240,12 +271,6 @@ export default function MovieCards({ title, category }) {
           </button>
         )}
       </div>
-
-      <style jsx>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
     </div>
   );
 }

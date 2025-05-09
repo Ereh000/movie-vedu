@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "@remix-run/react";
+import Logo from "../Assets/Images/plexia-logo-png.png"
 
 export default function Header() {
   const [prevScrollPos, setPrevScrollPos] = useState(0);
@@ -26,9 +27,9 @@ export default function Header() {
     >
       <div className="mx-auto px-4 sm-px-6 lg:px-16 md:px-12 py-3 flex justify-between items-center">
         {/* Logo */}
-        <div className="flex items-center">
+        <div className="flex items-center w-[100px] mt-[-6px] ">
           <Link to="/" className="text-2xl font-bold text-red-500">
-            PLEXIA
+            <img className="w-100" src={Logo} alt="" />
           </Link>
         </div>
 

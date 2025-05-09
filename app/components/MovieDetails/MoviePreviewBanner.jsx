@@ -106,7 +106,10 @@ export default function MoviePreviewBanner({ movie }) {
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${movieData.posterImage})` }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent">
+            {/* Add bottom gradient overlay */}
+            {/* <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent bottom-0 h-32"></div> */}
+          </div>
         </div>
 
         <div className="relative h-full container mx-auto px-4 md:px-8 lg:px-16 flex items-center">
@@ -143,7 +146,7 @@ export default function MoviePreviewBanner({ movie }) {
                 <button
                   // onClick={handlePlayClick}
                   style={{ lineHeight: 1 }}
-                  className="bg-white hover:bg-white/90 text-black text-[12px] px-4 ps-2 py-1 md:px-8 md:py-3 rounded-md flex items-center font-medium transition-colors"
+                  className="bg-white h-full hover:bg-white/90 text-black text-[12px] px-4 ps-2 py-1 md:px-8 md:py-3 rounded-md flex items-center font-medium transition-colors"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1 md:mr-2" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />

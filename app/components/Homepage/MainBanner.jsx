@@ -7,11 +7,44 @@ export default function MainBanner() {
   const [movies, setMovies] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+
+  // Add these touch handler functions after the existing navigation functions
+  const handleTouchStart = (e) => {
+    setTouchStart(e.touches[0].clientX);
+    setIsAutoPlaying(false);
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEnd(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const minSwipeDistance = 50;
+
+    if (Math.abs(distance) < minSwipeDistance) return;
+
+    if (distance > 0) {
+      // Swiped left
+      goToNextSlide();
+    } else {
+      // Swiped right
+      goToPrevSlide();
+    }
+
+    setTouchStart(0);
+    setTouchEnd(0);
+  };
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
       try {
-        const url = 'https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1';
+        const url =
+          "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1";
         const response = await fetch(url, {
           method: "GET",
           headers: {
@@ -20,17 +53,20 @@ export default function MainBanner() {
           },
         });
         const data = await response.json();
+        console.log("top_rated", data)
         // Only take the first 4 movies
-        setMovies(data.results.slice(0, 4).map(movie => ({
-          id: movie.id,
-          title: movie.title.toUpperCase(),
-          description: movie.overview,
-          image: `${TMDB_IMAGE_BASE_URL}/original${movie.backdrop_path}`,
-          logo: Logo,
-          rating: movie.adult ? "18+" : "13+",
-          genre: movie.genre_ids.join(", "), // You might want to map these IDs to actual genre names
-          year: new Date(movie.release_date).getFullYear()
-        })));
+        setMovies(
+          data.results.slice(0, 4).map((movie) => ({
+            id: movie.id,
+            title: movie.title.toUpperCase(),
+            description: movie.overview,
+            image: `${TMDB_IMAGE_BASE_URL}/original${movie.backdrop_path}`,
+            logo: Logo,
+            rating: movie.adult ? "18+" : "13+",
+            genre: movie.genre_ids.join(", "), // You might want to map these IDs to actual genre names
+            year: new Date(movie.release_date).getFullYear(),
+          }))
+        );
       } catch (error) {
         console.error("Error fetching movies:", error);
       }
@@ -61,9 +97,7 @@ export default function MainBanner() {
   };
 
   const goToPrevSlide = () => {
-    setCurrentSlide(
-      (prev) => (prev - 1 + movies.length) % movies.length
-    );
+    setCurrentSlide((prev) => (prev - 1 + movies.length) % movies.length);
     setIsAutoPlaying(false);
   };
 
@@ -83,7 +117,12 @@ export default function MainBanner() {
   const currentBanner = movies[currentSlide];
 
   return (
-    <div className="relative w-full h-[90vh] md:h-[98vh] overflow-hidden">
+    <div
+      className="relative w-full h-[100vh] md:h-[98vh] overflow-hidden"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       {/* Background Image with Gradient Overlay */}
       <div
         className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
@@ -92,8 +131,9 @@ export default function MainBanner() {
           opacity: 1,
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent"></div>
+        {/* <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent"></div> */}
       </div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent top-0 left-0 right-0 bottom-0 h-42"></div>
 
       {/* Content Container */}
       <div className="relative h-full mx-auto px-4 md:px-8 lg:px-16 flex flex-col justify-center">
@@ -158,7 +198,7 @@ export default function MainBanner() {
       </div>
 
       {/* Slideshow Navigation */}
-      <div className="absolute bottom-4 right-[50%] translate-x-16 lg:translate-x-0 lg:right-8 flex items-center space-x-2">
+      <div className="absolute bottom-4 right-[46%] translate-x-16 lg:translate-x-0 lg:right-8 flex items-center space-x-2">
         <button
           onClick={goToPrevSlide}
           className="p-2 rounded-full bg-black/50 text-white hover:bg-black/70 transition"
@@ -168,7 +208,7 @@ export default function MainBanner() {
             className="h-5 w-5"
             viewBox="0 0 20 20"
             fill="currentColor"
-          >
+          > 
             <path
               fillRule="evenodd"
               d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
@@ -183,7 +223,9 @@ export default function MainBanner() {
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`w-3 h-3 rounded-full ${index === currentSlide ? "bg-white" : "bg-white/50"}`}
+              className={`w-3 h-3 rounded-full ${
+                index === currentSlide ? "bg-white" : "bg-white/50"
+              }`}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}
