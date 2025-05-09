@@ -4,9 +4,9 @@ import MovieCards from "../components/Homepage/MovieCards";
 
 export default function MovieDetails() {
   return <div>
-    <section className="pb-8">
+    <section className="backdrop-blur-sm bg-black/90  pb-8">
         <MoviePreviewBanner/>
-        <MovieCards title="Related Movies" />
+        <MovieCards category="top_rated" title="Related Movies" />
     </section>
   </div>;
 }

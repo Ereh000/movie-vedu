@@ -1,88 +1,80 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Link } from "@remix-run/react";
 import Logo from "../../Assets/Images/vecteezy_netflix-mobile-application-logo_17396814.png";
+import { TMDB_API_KEY, TMDB_BASE_URL, TMDB_IMAGE_BASE_URL } from "../../utils/tmdb.config";
 
-export default function MovieCards({ title, movies }) {
+export default function MovieCards({ title, category }) {
   const sliderRef = useRef(null);
+  const [movies, setMovies] = useState([]);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
 
-  // Sample movie data (replace with your actual data)
-  const sampleMovies = [
-    {
-      id: 1,
-      title: "Territorial",
-      image: "https://wallpapercave.com/w400/wp13899414.jpg",
-      badge: "Recently Added",
-    },
-    {
-      id: 2,
-      title: "Mark Twain Prize",
-      image: "https://wallpapercave.com/w400/wp10223232.jpg",
-      badge: "Recently Added",
-    },
-    {
-      id: 3,
-      title: "News",
-      image: "https://wallpapercave.com/w400/wp11023565.jpg",
-      badge: "Recently Added",
-    },
-    {
-      id: 4,
-      title: "Havoc",
-      image: "https://wallpapercave.com/w400/wp9335385.jpg",
-      badge: "Recently Added",
-    },
-    {
-      id: 5,
-      title: "Resident Playbook",
-      image: "https://wallpapercave.com/w400/wp12198183.jpg",
-      badge: "New Dubbing",
-    },
-    {
-      id: 6,
-      title: "Khakee",
-      image: "https://wallpapercave.com/w400/wp13899414.jpg",
-      badge: "Recently Added",
-    },
-    {
-      id: 2,
-      title: "Mark Twain Prize",
-      image: "https://wallpapercave.com/w400/wp10223232.jpg",
-      badge: "Recently Added",
-    },
-    {
-      id: 3,
-      title: "News",
-      image: "https://wallpapercave.com/w400/wp11023565.jpg",
-      badge: "Recently Added",
-    },
-    {
-      id: 4,
-      title: "Havoc",
-      image: "https://wallpapercave.com/w400/wp9335385.jpg",
-      badge: "Recently Added",
-    },
-    {
-      id: 5,
-      title: "Resident Playbook",
-      image: "https://wallpapercave.com/w400/wp12198183.jpg",
-      badge: "New Dubbing",
-    },
-    {
-      id: 6,
-      title: "Khakee",
-      image: "https://wallpapercave.com/w400/wp13899414.jpg",
-      badge: "Recently Added",
-    },
-  ];
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        if (category === "now_playing") {
+          const url = 'https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1';
+          const response = await fetch(url, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${TMDB_API_KEY}`,
+            },
+          })
+          const data = await response.json();
+          console.log("now_playing", data);
+          setMovies(data.results);
+        } else if (category === "popular") {
+          const url = 'https://api.themoviedb.org/3/movie/popular?language=en-US&page=1';
+          const response = await fetch(url, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${TMDB_API_KEY}`,
+            },
+          })
+          const data = await response.json();
+          console.log("popular", data);
+          setMovies(data.results);
+        } else if (category === "top_rated") {
+          const url = 'https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1';
+          const response = await fetch(url, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${TMDB_API_KEY}`,
+            },
+          })
+          const data = await response.json();
+          console.log("data", data);
+          setMovies(data.results);
+        } else if (category === "up_comming") {
+          const url = 'https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1';
+          const response = await fetch(url, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${TMDB_API_KEY}`,
+            },
+          })
+          const data = await response.json();
+          console.log("up_comming", data);
+          setMovies(data.results);
+        }
 
-  const moviesToRender = movies || sampleMovies;
+      } catch (error) {
+        console.error("Error fetching movies:", error);
+      }
+    };
 
-  // Check if arrows should be displayed
+    fetchMovies();
+  }, [category]);
+
+  console.log("movies", movies);
+
   const checkArrows = () => {
     if (!sliderRef.current) return;
 
@@ -97,7 +89,6 @@ export default function MovieCards({ title, movies }) {
     return () => window.removeEventListener("resize", checkArrows);
   }, []);
 
-  // Scroll functions
   const scroll = (direction) => {
     if (!sliderRef.current) return;
 
@@ -110,11 +101,9 @@ export default function MovieCards({ title, movies }) {
       behavior: "smooth",
     });
 
-    // Update arrows after scrolling
     setTimeout(checkArrows, 500);
   };
 
-  // Touch/mouse drag handlers
   const handleMouseDown = (e) => {
     if (!sliderRef.current) return;
     setIsDragging(true);
@@ -133,7 +122,7 @@ export default function MovieCards({ title, movies }) {
     if (!isDragging || !sliderRef.current) return;
     e.preventDefault();
     const x = e.pageX - sliderRef.current.offsetLeft;
-    const walk = (x - startX) * 2; // Scroll speed multiplier
+    const walk = (x - startX) * 2;
     sliderRef.current.scrollLeft = scrollLeft - walk;
     checkArrows();
   };
@@ -155,12 +144,10 @@ export default function MovieCards({ title, movies }) {
   };
 
   return (
-    <div className="movie-row relative py-10 pb-0 px-4 md:px-8 lg:px-16">
+    <div className="movie-row bg-transparent relative py-10 pb-0 px-4 md:px-8 lg:px-16">
       <h2 className="text-md md:text-[1.5rem] font-bold text-white mb-2 md:mb-4">{title}</h2>
 
-      {/* Movie Slider */}
       <div className="relative">
-        {/* Left Arrow */}
         {showLeftArrow && (
           <button
             className="absolute left-[-1rem] top-1/2 z-10 bg-black/70 p-2 px-1 lg:p-4 rounded-r-md text-white hover:bg-black/70 transition-all transform -translate-y-1/2"
@@ -186,9 +173,8 @@ export default function MovieCards({ title, movies }) {
 
         <div
           ref={sliderRef}
-          className={`flex space-x-3 overflow-x-auto scrollbar-hide ${
-            isDragging ? "cursor-grabbing" : "cursor-grab"
-          }`}
+          className={`flex space-x-3 overflow-x-auto scrollbar-hide ${isDragging ? "cursor-grabbing" : "cursor-grab"
+            }`}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleDragEnd}
@@ -199,21 +185,20 @@ export default function MovieCards({ title, movies }) {
           onScroll={handleScroll}
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          {moviesToRender.map((movie) => (
+          {movies.map((movie) => (
             <div
               key={movie.id}
               className="flex-none w-[110px] md:w-[200px] relative group"
             >
-              <Link to={`/movie/details?id=4`} className="block">
+              <Link to={`/movie/details?id=${movie.id}`} className="block">
                 <div className="relative overflow-hidden rounded-[4px] transition-transform duration-300 group-hover:shadow-xl">
                   <img
-                    src={movie.image}
+                    src={`${TMDB_IMAGE_BASE_URL}/w500${movie.poster_path}`}
                     alt={movie.title}
                     className="w-full h-auto aspect-[1/1.4] object-cover duration-300 hover:scale-110"
                     draggable="false"
                   />
 
-                  {/* Netflix Logo */}
                   <div className="absolute top-2 left-2">
                     <img
                       src={Logo}
@@ -223,19 +208,15 @@ export default function MovieCards({ title, movies }) {
                     />
                   </div>
 
-                  {/* Badge */}
-                  {movie.badge && (
-                    <div className="absolute bottom-0 left-0 bg-red-600 text-white text-[9px] md:text-xs py-[3px] px-[6px]">
-                      {movie.badge}
-                    </div>
-                  )}
+                  <div className="absolute bottom-0 left-0 bg-red-600 text-white text-[9px] md:text-xs py-[3px] px-[6px]">
+                    {movie.vote_average.toFixed(1)} ⭐
+                  </div>
                 </div>
               </Link>
             </div>
           ))}
         </div>
 
-        {/* Right Arrow */}
         {showRightArrow && (
           <button
             className="absolute right-[-1rem] top-1/2 z-10 bg-black/70 p-2 px-1 lg:p-4 rounded-l-md text-white hover:bg-black/80 transition-all transform -translate-y-1/2"
@@ -260,7 +241,6 @@ export default function MovieCards({ title, movies }) {
         )}
       </div>
 
-      {/* Add custom CSS for hiding scrollbar */}
       <style jsx>{`
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
