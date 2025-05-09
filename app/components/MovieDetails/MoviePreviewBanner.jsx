@@ -14,7 +14,7 @@ export default function MoviePreviewBanner({ movie }) {
   useEffect(() => {
     const fetchMovieDetails = async () => {
       if (!movieId) return;
-      
+
       setIsLoading(true);
       const url = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`;
       try {
@@ -41,7 +41,7 @@ export default function MoviePreviewBanner({ movie }) {
   useEffect(() => {
     const fetchVideoData = async () => {
       if (!movieId) return;
-      
+
       try {
         const url = `https://api.themoviedb.org/3/movie/${movieId}/videos?language=en-US`;
         const response = await fetch(url, {
@@ -139,16 +139,18 @@ export default function MoviePreviewBanner({ movie }) {
             </div>
 
             <div className="flex flex-wrap gap-2">
-              <button 
-                onClick={handlePlayClick}
-                style={{ lineHeight: 1 }} 
-                className="bg-white hover:bg-white/90 text-black text-[12px] px-4 ps-2 py-1 md:px-8 md:py-3 rounded-md flex items-center font-medium transition-colors"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1 md:mr-2" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-                </svg>
-                Play
-              </button>
+              <Link to={`/movieplayer?id=${videoId}`}>
+                <button
+                  // onClick={handlePlayClick}
+                  style={{ lineHeight: 1 }}
+                  className="bg-white hover:bg-white/90 text-black text-[12px] px-4 ps-2 py-1 md:px-8 md:py-3 rounded-md flex items-center font-medium transition-colors"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1 md:mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                  </svg>
+                  Play
+                </button>
+              </Link>
 
               <button style={{ lineHeight: 1 }} className="bg-gray-600/80 ps-2 hover:bg-gray-600 text-[12px] text-white  px-4 py-[2px] md:px-8 md:py-3  rounded-md flex items-center font-medium transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4  mr-1 md:mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -185,9 +187,9 @@ export default function MoviePreviewBanner({ movie }) {
       </div>
 
       {showVideoPlayer && videoId && (
-        <VideoPlayer 
-          videoId={videoId} 
-          onClose={() => setShowVideoPlayer(false)} 
+        <VideoPlayer
+          videoId={videoId}
+          onClose={() => setShowVideoPlayer(false)}
         />
       )}
     </>
