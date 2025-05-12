@@ -21,7 +21,7 @@ export default function VideoPlayer() {
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-8 w-8"
-          style={{color: "#000"}}
+          style={{ color: "#000" }}
           fill="#000"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -44,11 +44,13 @@ export default function VideoPlayer() {
             allowFullScreen
         ></iframe> */}
         <iframe
-          src="https://player.vimeo.com/video/1083654807?h=cd31bc553f&amp;title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+          src="https://player.vimeo.com/video/1083678311?h=81d1858b32&amp;title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+          width="1280"
+          height="528"
           className="absolute inset-0 w-full h-full"
           frameborder="0"
           allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
-          title="Kung Fu Hustle (2004)www.10xflix.com  UNRATED  Hindi ORG Dual Audio Movie 720p BluRay"
+          title="4_5771482232371810792"
         ></iframe>
       </div>
     </div>
