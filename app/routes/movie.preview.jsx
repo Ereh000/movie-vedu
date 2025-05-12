@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "@remix-run/react";
+import { MoreLikeThis } from "../components/Vedu/MoreLikeThis";
 
 export default function MoviePreview() {
   const navigate = useNavigate();
@@ -27,31 +28,28 @@ export default function MoviePreview() {
     <div className="min-h-screen bg-gray-900 text-white">
       {/* Back button and top actions */}
       <TopNavigation navigate={navigate} />
-
       {/* Trailer Video Section */}
       <TrailerSection trailerUrl={movie.trailerUrl} />
-
       {/* Movie Title and Info */}
       <MovieInfo movie={movie} />
-
       {/* Watch Now Button */}
       <WatchButton isPremium={movie.isPremium} />
-
       {/* Ad Banner */}
       <AdBanner />
-
       {/* Tabs Navigation */}
       <TabNavigation
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         commentCount={movie.commentCount}
       />
-
       {/* Tab Content */}
       <TabContent activeTab={activeTab} movie={movie} />
-
       {/* Action Buttons */}
       <ActionButtons />
+      {/* Seasons */}
+      <Seasons />
+      {/* More Like This */}
+      <MoreLikeThis />
     </div>
   );
 }
@@ -143,25 +141,27 @@ function TrailerSection({ trailerUrl }) {
       <div className="w-full h-full flex items-center justify-center bg-black">
         <div className="relative">
           <img
-            src="https://image.tmdb.org/t/p/original/t4FC3XOQTGF66JnotzXpNsBnZSH.jpg"
+            src="https://i.ytimg.com/vi/eQULWOwwueY/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLB6F1W-ciLbdlsso5_6l9Q_jkfsbg"
             alt="Trailer thumbnail"
             className="w-full h-full object-cover opacity-50"
           />
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="bg-red-600 rounded-full p-0">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8 text-white"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
+            <Link to="/movieplayer">
+              <div className="bg-red-600 rounded-full p-0">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-8 w-8 text-white"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+            </Link>
           </div>
         </div>
       </div>
@@ -324,9 +324,7 @@ function TabContent({ activeTab, movie }) {
   return (
     <div className="px-4 py-4" style={{ fontSize: "11px" }}>
       {activeTab === "details" && (
-        <p className="text-gray-400 leading-relaxed">
-          {movie.description}
-        </p>
+        <p className="text-gray-400 leading-relaxed">{movie.description}</p>
       )}
 
       {activeTab === "comments" && (
@@ -424,5 +422,135 @@ function ActionButtons() {
         </button>
       </div>
     </div>
+  );
+}
+
+function Seasons() {
+  const episodes = [
+    {
+      id: 1,
+      title: "Episode 1",
+      image:
+        "https://image.tmdb.org/t/p/original/t4FC3XOQTGF66JnotzXpNsBnZSH.jpg",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      duration: "1h 30m",
+    },
+    {
+      id: 2,
+      title: "Episode 2",
+      image:
+        "https://image.tmdb.org/t/p/original/t4FC3XOQTGF66JnotzXpNsBnZSH.jpg",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      duration: "1h 30m",
+    },
+    {
+      id: 3,
+      title: "Episode 3",
+      image:
+        "https://image.tmdb.org/t/p/original/t4FC3XOQTGF66JnotzXpNsBnZSH.jpg",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      duration: "1h 30m",
+    },
+    {
+      id: 4,
+      title: "Episode 4",
+      image:
+        "https://image.tmdb.org/t/p/original/t4FC3XOQTGF66JnotzXpNsBnZSH.jpg",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      duration: "1h 30m",
+    },
+    {
+      id: 5,
+      title: "Episode 5",
+      image:
+        "https://image.tmdb.org/t/p/original/t4FC3XOQTGF66JnotzXpNsBnZSH.jpg",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      duration: "1h 30m",
+    },
+    {
+      id: 6,
+      title: "Episode 6",
+      image:
+        "https://image.tmdb.org/t/p/original/t4FC3XOQTGF66JnotzXpNsBnZSH.jpg",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      duration: "1h 30m",
+    },
+    {
+      id: 7,
+      title: "Episode 7",
+      image:
+        "https://image.tmdb.org/t/p/original/t4FC3XOQTGF66JnotzXpNsBnZSH.jpg",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      duration: "1h 30m",
+    },
+    {
+      id: 8,
+      title: "Episode 8",
+      image:
+        "https://image.tmdb.org/t/p/original/t4FC3XOQTGF66JnotzXpNsBnZSH.jpg",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      duration: "1h 30m",
+    },
+  ];
+
+  return (
+    <section>
+      {/* Episodes Section */}
+      <div className="mt-6 px-4">
+        <div className="flex justify-between items-center mb-3">
+          <h3 className="text-white font-bold text-sm">
+            Season 1 · 8 Episodes
+          </h3>
+          <button className="text-yellow-500">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <div className="flex overflow-x-auto space-x-3 pb-4 hide-scrollbar">
+          {episodes.map((episode, index) => (
+            <div key={index} className="flex-shrink-0 w-32 relative">
+              <div className="relative">
+                <img
+                  src={episode.image}
+                  alt={`Episode ${index + 1}`}
+                  className="w-32 h-20 object-cover rounded-md"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src =
+                      "https://via.placeholder.com/128x72?text=Episode";
+                  }}
+                />
+                {/* <p>{episode.title}</p> */}
+                <div className="absolute bottom-1 left-1 text-xs text-white bg-black/70 px-1 rounded">
+                  {episode.duration}
+                </div>
+              </div>
+              <div className="mt-1 text-xs text-white">{episode.title}</div>
+            </div>
+          ))}
+        </div>
+
+        <style jsx>{`
+          .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+          }
+          .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          }
+        `}</style>
+      </div>
+    </section>
   );
 }

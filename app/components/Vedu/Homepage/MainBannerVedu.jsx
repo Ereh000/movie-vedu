@@ -8,6 +8,12 @@ import "swiper/css/pagination";
 export default function MainBannerVedu() {
   const bannerImages = [
     {
+      id: 11,
+      image: "https://i.ytimg.com/vi/eQULWOwwueY/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLB6F1W-ciLbdlsso5_6l9Q_jkfsbg",
+      title: "Kung Fu Huslte",
+      language: "Multi",
+    },
+    {
       id: 1,
       image: "https://i.ytimg.com/vi/s6uaIBOyopM/maxresdefault.jpg",
       title: "Sultan Fateh",
@@ -33,7 +39,7 @@ export default function MainBannerVedu() {
     <section className="main_veduBanner">
       <div className="relative w-full">
         <Swiper
-          modules={[Pagination]}
+          modules={[Pagination, Autoplay]}
           pagination={{
             clickable: true,
             bulletClass: "swiper-pagination-bullet",
@@ -59,7 +65,7 @@ export default function MainBannerVedu() {
                       alt={banner.title}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
                     <div className="badge_wrapper">
                       <span className="language">{banner.language}</span>
                       <span className="Qualtity">HD</span>
