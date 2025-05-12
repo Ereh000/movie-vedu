@@ -7,8 +7,11 @@ import {
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 import Header from "./components/header"
+import HeaderVedu from "./components/Vedu/HeaderVedu"
+import Footer from "./components/Vedu/Footer"
 
 import "./tailwind.css";
+import "./Assets/main.css"
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -33,8 +36,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <Header/>
+        {/* <Header/> */}
+        <HeaderVedu/>
         {children}
+        <Footer/>
         <ScrollRestoration />
         <Scripts />
       </body>
