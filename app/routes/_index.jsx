@@ -1,5 +1,5 @@
-import MainBanner from "../components/Homepage/MainBanner";
-import MovieCards from "../components/Homepage/MovieCards";
+// import MainBanner from "../components/Homepage/MainBanner";
+// import MovieCards from "../components/Homepage/MovieCards";
 import CollectionListVedu from "../components/Vedu/Homepage/CollectionListVedu";
 import MainBannerVedu from "../components/Vedu/Homepage/MainBannerVedu";
 import MovieCardsVedu from "../components/Vedu/Homepage/MovieCardsVedu";

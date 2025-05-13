@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "@remix-run/react";
+import React, { useEffect, useState } from "react";
+import { Link, useSearchParams } from "@remix-run/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
@@ -9,7 +9,8 @@ export default function MainBannerVedu() {
   const bannerImages = [
     {
       id: 11,
-      image: "https://i.ytimg.com/vi/eQULWOwwueY/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLB6F1W-ciLbdlsso5_6l9Q_jkfsbg",
+      image:
+        "https://m.media-amazon.com/images/M/MV5BNTE4ZmZmNjYtM2U4ZS00YjE3LTgyMTUtNzdkN2Q5NWVhNTk2XkEyXkFqcGdeQWxiaWFtb250._V1_.jpg",
       title: "Kung Fu Huslte",
       language: "Multi",
     },
@@ -34,6 +35,30 @@ export default function MainBannerVedu() {
       language: "Urdu",
     },
   ];
+
+  const [playlistVideos, setPlaylistVideos] = useState([]);
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [searchParams] = useSearchParams();
+  const playlistId = searchParams.get("playlist") || "x9oqly"; // Example playlist ID
+
+  useEffect(() => {
+    const fetchPlaylistVideos = async () => {
+      try {
+        // Fetch playlist videos
+        const url = `https://api.dailymotion.com/playlist/${playlistId}/videos?fields=id,title,thumbnail_url,duration`;
+        const response = await fetch(url);
+        const data = await response.json();
+        console.log("data", data);
+        if (data.list) {
+          setPlaylistVideos(data.list);
+        }
+      } catch (error) {
+        console.error("Error fetching playlist:", error);
+      }
+    };
+
+    fetchPlaylistVideos();
+  }, [playlistId]);
 
   return (
     <section className="main_veduBanner">

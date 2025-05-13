@@ -40,7 +40,7 @@ export default function VideoPlayer() {
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-8 w-8"
-          style={{ color: "#000" }}
+          style={{ color: "#fff" }}
           fill="#000"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -77,7 +77,7 @@ export default function VideoPlayer() {
           allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
           allowFullScreen
         ></iframe> */}
-        <iframe
+        {/* <iframe
           // width="640"
           className="absolute inset-0 w-full h-full"
           // height="480"
@@ -85,6 +85,13 @@ export default function VideoPlayer() {
           // scrolling="no"
           // frameborder="0"
           allowfullscreen
+        ></iframe> */}
+        <iframe
+          src="https://geo.dailymotion.com/player.html?video=x9jgkhu"
+          className="absolute inset-0 w-full h-full"
+          allowfullscreen
+          title="Dailymotion Video Player"
+          allow="web-share"
         ></iframe>
       </div>
     </div>

@@ -141,7 +141,7 @@ function TrailerSection({ trailerUrl }) {
       <div className="w-full h-full flex items-center justify-center bg-black">
         <div className="relative">
           <img
-            src="https://i.ytimg.com/vi/eQULWOwwueY/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLB6F1W-ciLbdlsso5_6l9Q_jkfsbg"
+            src="https://m.media-amazon.com/images/M/MV5BNTE4ZmZmNjYtM2U4ZS00YjE3LTgyMTUtNzdkN2Q5NWVhNTk2XkEyXkFqcGdeQWxiaWFtb250._V1_.jpg"
             alt="Trailer thumbnail"
             className="w-full h-full object-cover opacity-50"
           />
