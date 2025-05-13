@@ -55,7 +55,7 @@ export default function VideoPlayer() {
       </button>
 
       {/* Video iframe */}
-      <div className="w-full h-full md:w-[90%] md:h-[80vh] relative">
+      <div className="w-full h-[50%] md:w-[90%] md:h-[80vh] relative">
         {/* <iframe
           src="https://player.vimeo.com/video/1083678311?h=81d1858b32&amp;title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
           width="1280"
