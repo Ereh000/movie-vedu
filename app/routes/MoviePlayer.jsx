@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 
 export default function VideoPlayer() {
   const [videoData, setVideoData] = useState(null);
-  const [videoId, setVideoId] = useState("");
+  const [videoId, setVideoId] = useState("kALFb6hl9a9wJED2E1q");
   const [searchParams] = useSearchParams();
-  const movieId = searchParams.get("id") || "x9jf786";
+  const movieId = searchParams.get("id") || "kALFb6hl9a9wJED2E1q";
 
   useEffect(() => {
     const fetchVideoData = async () => {
@@ -56,42 +56,13 @@ export default function VideoPlayer() {
 
       {/* Video iframe */}
       <div className="w-full h-[50%] md:w-[90%] md:h-[80vh] relative">
-        {/* <iframe
-          src="https://player.vimeo.com/video/1083678311?h=81d1858b32&amp;title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
-          width="1280"
-          height="528"
-          className="absolute inset-0 w-full h-full"
-          frameborder="0"
-          allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
-          title="4_5771482232371810792"
-        ></iframe> */}
-
-        {/* <iframe
-          // src={`https://geo.dailymotion.com/player.html?video=${movieId}&autoplay=1`}
-          // src="https://geo.dailymotion.com/player.html?video=x9jf786"
-          className="absolute inset-0 w-full h-full"
-          width="1280"
-          height="528"
-          title="Dailymotion Video Player"
-          frameBorder="0"
-          allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
-          allowFullScreen
-        ></iframe> */}
-        {/* <iframe
-          // width="640"
-          className="absolute inset-0 w-full h-full"
-          // height="480"
-          src="//mxdrop.to/e/el14x1pmb8gvll"
-          // scrolling="no"
-          // frameborder="0"
-          allowfullscreen
-        ></iframe> */}
         <iframe
-          src="https://geo.dailymotion.com/player.html?video=x9jgkhu"
+          src={`https://geo.dailymotion.com/player.html?video=${videoId}`}
           className="absolute inset-0 w-full h-full"
           allowfullscreen
           title="Dailymotion Video Player"
-          allow="web-share"
+          frameborder="0"
+          allow="autoplay; fullscreen; picture-in-picture; web-share"
         ></iframe>
       </div>
     </div>

@@ -1,55 +1,89 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "@remix-run/react";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "@remix-run/react";
 import { MoreLikeThis } from "../components/Vedu/MoreLikeThis";
+import Seasons from "../components/MoviePreview/Seasons";
+import TabNavigationn from "../components/MoviePreview/TabNavigation";
+
+// Mock movie data
+// const movie = {
+//   id: "weak-hero-class-1",
+//   title: "Weak Hero Class 1",
+//   season: "Season 2",
+//   year: 2023,
+//   country: "South Korea",
+//   genres: ["Drama", "Thriller", "Action"],
+//   audio: ["Hindi", "English"],
+//   rating: 8.3,
+//   isPremium: true,
+//   description:
+//     "With the aid of unexpected friends, a gifted but introverted student confronts bullies and violent foes — unaware of how dangerous his world will become.",
+//   trailerUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+//   posterUrl: "https://i.imgur.com/JR5vXQ5.jpg",
+//   commentCount: 57,
+// };
 
 export default function MoviePreview() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("details");
+  const [activeTab, setActiveTab] = useState("seasons");
+  const [episodeId, setEpisodeId] = useState("");
 
-  // Mock movie data
-  const movie = {
-    id: "weak-hero-class-1",
-    title: "Weak Hero Class 1",
-    season: "Season 2",
-    year: 2023,
-    country: "South Korea",
-    genres: ["Drama", "Thriller", "Action"],
-    audio: ["Hindi", "English"],
-    rating: 8.3,
-    isPremium: true,
-    description:
-      "With the aid of unexpected friends, a gifted but introverted student confronts bullies and violent foes — unaware of how dangerous his world will become.",
-    trailerUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    posterUrl: "https://i.imgur.com/JR5vXQ5.jpg",
-    commentCount: 57,
-  };
+  const [playlistVideos, setPlaylistVideos] = useState([]);
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [searchParams] = useSearchParams();
+  const playlistId = searchParams.get("playlist") || "x9os26"; // Example playlist ID
+  const episodeParam = searchParams.get("episode");
+
+  console.log("playlistId", playlistId);
+  console.log("episodeId", episodeId);
+
+  useEffect(() => {
+    const fetchPlaylistVideos = async () => {
+      try {
+        // Fetch playlist videos
+        const url = `https://api.dailymotion.com/playlist/${playlistId}/videos?fields=id,title,thumbnail_url,duration`;
+        const response = await fetch(url);
+        const data = await response.json();
+        if (data.list) {
+          setPlaylistVideos(data.list);
+          // Only set the first episode if no episode is specified in URL
+          if (!episodeParam && data.list.length > 0) {
+            setEpisodeId(data.list[0].id);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching playlist:", error);
+      }
+    };
+
+    fetchPlaylistVideos();
+  }, [playlistId, episodeParam]);
+
+  // Update episodeId when the URL parameter changes
+  useEffect(() => {
+    if (episodeParam) {
+      setEpisodeId(episodeParam);
+    }
+  }, [episodeParam]);
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       {/* Back button and top actions */}
       <TopNavigation navigate={navigate} />
       {/* Trailer Video Section */}
-      <TrailerSection trailerUrl={movie.trailerUrl} />
+      <EpisodePlayer episodeId={episodeId} />
       {/* Movie Title and Info */}
-      <MovieInfo movie={movie} />
-      {/* Watch Now Button */}
-      <WatchButton isPremium={movie.isPremium} />
+      <MovieInfo playlistVideos={playlistVideos} episodeId={episodeId} />
       {/* Ad Banner */}
       <AdBanner />
-      {/* Tabs Navigation */}
-      <TabNavigation
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        commentCount={movie.commentCount}
-      />
-      {/* Tab Content */}
-      <TabContent activeTab={activeTab} movie={movie} />
       {/* Action Buttons */}
       <ActionButtons />
-      {/* Seasons */}
-      <Seasons />
-      {/* More Like This */}
-      <MoreLikeThis />
+      <TabNavigationn activeTab={activeTab} setActiveTab={setActiveTab} />
+      {activeTab === "seasons" && (
+        <Seasons playlistVideos={playlistVideos} playlistId={playlistId} />
+      )}
+      {activeTab === "details" && <TabContent />}
+      {activeTab === "moreLikeThis" && <MoreLikeThis />}
+      <br />
     </div>
   );
 }
@@ -109,45 +143,76 @@ function TopNavigation({ navigate }) {
   );
 }
 
-// Component for trailer video section
-function TrailerSection({ trailerUrl }) {
+// Component for Episode Player section
+function EpisodePlayer({ episodeId }) {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handlePlayClick = () => {
+    setIsPlaying(true);
+    setIsLoading(true);
+  };
+
   return (
     <div
       className="relative mx-4 rounded-lg overflow-hidden"
       style={{ aspectRatio: "16/9", margin: "0 10px" }}
     >
-      <div
-        className="absolute top-[2rem] left-3 bg-black/70 px-2 py-1 rounded text-[9px]"
-        style={{ top: "2px" }}
-      >
-        Trailer
-      </div>
-      {/* <div className="absolute top-3 right-3 bg-black/70 p-1 rounded-full">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15.536a5 5 0 001.414 1.414m2.828-9.9a9 9 0 012.728-2.728"
-          />
-        </svg>
-      </div> */}
-      <div className="w-full h-full flex items-center justify-center bg-black">
-        <div className="relative">
-          <img
-            src="https://m.media-amazon.com/images/M/MV5BNTE4ZmZmNjYtM2U4ZS00YjE3LTgyMTUtNzdkN2Q5NWVhNTk2XkEyXkFqcGdeQWxiaWFtb250._V1_.jpg"
-            alt="Trailer thumbnail"
-            className="w-full h-full object-cover opacity-50"
-          />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Link to="/movieplayer">
-              <div className="bg-red-600 rounded-full p-0">
+      {isPlaying ? (
+        <>
+          {isLoading && (
+            <div className="absolute inset-0 bg-gray-800 animate-pulse flex items-center justify-center z-10">
+              <div className="flex flex-col items-center">
+                <svg
+                  className="animate-spin h-10 w-10 text-yellow-500 mb-2"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                <span className="text-white text-sm">Loading video...</span>
+              </div>
+            </div>
+          )}
+          <iframe
+            src={`https://geo.dailymotion.com/player.html?video=${episodeId}`}
+            className="absolute inset-0 w-full h-full"
+            allowFullScreen
+            title="Dailymotion Video Player"
+            frameBorder="0"
+            allow="autoplay; fullscreen; picture-in-picture; web-share"
+            onLoad={() => setIsLoading(false)}
+          ></iframe>
+        </>
+      ) : (
+        <div className="w-full h-full flex items-center justify-center bg-black">
+          <div className="relative w-full h-full">
+            <img
+              src="https://m.media-amazon.com/images/M/MV5BNTE4ZmZmNjYtM2U4ZS00YjE3LTgyMTUtNzdkN2Q5NWVhNTk2XkEyXkFqcGdeQWxiaWFtb250._V1_.jpg"
+              alt="Trailer thumbnail"
+              className="w-full h-full object-cover opacity-95"
+            />
+            <div
+              className="absolute inset-0 flex items-center justify-center"
+              onClick={handlePlayClick}
+            >
+              <button
+                onClick={handlePlayClick}
+                className="bg-red-600 rounded-full p-0 hover:bg-red-700 transition-colors"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-8 w-8 text-white"
@@ -160,54 +225,73 @@ function TrailerSection({ trailerUrl }) {
                     clipRule="evenodd"
                   />
                 </svg>
-              </div>
-            </Link>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
 
 // Component for movie title and information
-function MovieInfo({ movie }) {
+function MovieInfo({ playlistVideos, episodeId }) {
+  // Find the current episode from the playlist
+  const currentEpisode =
+    playlistVideos.find((video) => video.id === episodeId) || {};
+
+  // Extract season and episode number from title if available
+  const seasonMatch = currentEpisode.title?.match(/Season\s+(\d+)/i);
+  const episodeMatch = currentEpisode.title?.match(/Episode\s+(\d+)/i);
+
+  const seasonNumber = seasonMatch ? seasonMatch[1] : "";
+  const episodeNumber = episodeMatch ? episodeMatch[1] : "";
+
+  const cleanTitle = currentEpisode.title;
+
+  const displayTitle = cleanTitle || "";
+
   return (
     <div className="px-4 mt-4">
-      <h1 className="text-[16px] font-bold flex justify-between items-center">
-        {movie.title}{" "}
-        <span className="ml-2 text-[15px] text-yellow-500">{movie.season}</span>
+      <h1 className="episode__title text-[16px] font-bold flex justify-between items-center">
+        {displayTitle}
       </h1>
-      <div className="mt-2 text-xs text-gray-400">
-        <span>{movie.year}</span> / <span>{movie.country}</span> /{" "}
-        <span>{movie.genres.join(" / ")}</span>
+      <div className="audio_seasonInfo mt-1 flex justify-between items-center text-xs text-gray-400">
+        <span
+          style={{ minWidth: "fit-content" }}
+          className="season__e-text text-[14px] text-white "
+        >
+          {episodeNumber ? `S${seasonNumber} E${episodeNumber}` : seasonNumber}
+        </span>
+        <div>
+          <span>Urdu</span>
+        </div>
       </div>
-      <div className="mt-1 text-xs text-gray-400">
-        <span>Audio:</span> <span>{movie.audio.join(" / ")}</span>
+      <div className="mt-2 mb-4 text-xs text-gray-400">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur
+        alias blanditiis amet eum rerum aut unde et! Assumenda, alias aliquid?
       </div>
+
       <div className="mt-2 flex justify-between items-center">
-        {movie.isPremium && (
-          <span className="bg-yellow-500 text-black text-xs px-2 py-1 rounded mr-3 flex items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-3 w-3 mr-1"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M5 5a3 3 0 015-2.236A3 3 0 0114.83 6H16a2 2 0 110 4h-5V9a1 1 0 10-2 0v1H4a2 2 0 110-4h1.17C5.06 5.687 5 5.35 5 5zm4 1V5a1 1 0 10-1 1h1zm3 0a1 1 0 10-1-1v1h1z"
-                clipRule="evenodd"
-              />
-              <path d="M9 11H3v5a2 2 0 002 2h4v-7zm2 7h4a2 2 0 002-2v-5h-6v7z" />
-            </svg>
-            Premium First
-          </span>
-        )}
+        <span className="btn-primary bg-yellow-500 text-black text-xs px-2 py-1 rounded mr-3 flex items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-3 w-3 mr-1"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M5 5a3 3 0 015-2.236A3 3 0 0114.83 6H16a2 2 0 110 4h-5V9a1 1 0 10-2 0v1H4a2 2 0 110-4h1.17C5.06 5.687 5 5.35 5 5zm4 1V5a1 1 0 10-1 1h1zm3 0a1 1 0 10-1-1v1h1z"
+              clipRule="evenodd"
+            />
+            <path d="M9 11H3v5a2 2 0 002 2h4v-7zm2 7h4a2 2 0 002-2v-5h-6v7z" />
+          </svg>
+          Exclusive
+        </span>
         <div className="flex items-center">
-          <span className="text-gray-400 text-xs mr-1">Rating</span>
-          <span className="text-yellow-500 text-sm font-bold">
-            {movie.rating}
-          </span>
+          <span className="text-white text-xs mr-1">Rating</span>
+          <span className="text-yellow-500 text-sm font-bold gold_color">8.5</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-4 w-4 text-yellow-500 ml-1"
@@ -218,36 +302,6 @@ function MovieInfo({ movie }) {
           </svg>
         </div>
       </div>
-    </div>
-  );
-}
-
-// Component for watch now button
-function WatchButton({ isPremium }) {
-  return (
-    <div className="px-4 mt-4">
-      <Link to="/movieplayer">
-        <button
-          className="w-full bg-yellow-600 text-black font-bold py-3 rounded-lg flex items-center justify-center"
-          style={{
-            background: "rgb(234 179 8 / var(--tw-text-opacity, 1))",
-          }}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 mr-2"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fillRule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-              clipRule="evenodd"
-            />
-          </svg>
-          Watch Now
-        </button>
-      </Link>
     </div>
   );
 }
@@ -277,56 +331,16 @@ function AdBanner() {
   );
 }
 
-// Component for tab navigation
-function TabNavigation({ activeTab, setActiveTab, commentCount }) {
-  return (
-    <div
-      className="px-4 mt-6 border-b border-gray-800"
-      style={{ fontSize: "12px" }}
-    >
-      <div className="flex items-center justify-between">
-        <button
-          onClick={() => setActiveTab("details")}
-          className={`pb-2 px-4 ${
-            activeTab === "details"
-              ? "text-yellow-500 border-b-2 border-yellow-500"
-              : "text-gray-400"
-          }`}
-        >
-          Details
-        </button>
-        <button
-          onClick={() => setActiveTab("comments")}
-          className={`pb-2 px-4 flex items-center ${
-            activeTab === "comments"
-              ? "text-yellow-500 border-b-2 border-yellow-500"
-              : "text-gray-400"
-          }`}
-        >
-          Comments{" "}
-          <span className="ml-1 text-xs text-gray-500">{commentCount}</span>
-        </button>
-        <button
-          onClick={() => setActiveTab("trailer")}
-          className={`pb-2 px-4 ${
-            activeTab === "trailer"
-              ? "text-yellow-500 border-b-2 border-yellow-500"
-              : "text-gray-400"
-          }`}
-        >
-          Trailer
-        </button>
-      </div>
-    </div>
-  );
-}
-
 // Component for tab content
-function TabContent({ activeTab, movie }) {
+function TabContent({ activeTab }) {
   return (
     <div className="px-4 py-4" style={{ fontSize: "11px" }}>
       {activeTab === "details" && (
-        <p className="text-gray-400 leading-relaxed">{movie.description}</p>
+        <p className="text-gray-400 leading-relaxed">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro
+          voluptatem quo sit mollitia molestias ab voluptatibus ipsum repellat
+          veniam tenetur.
+        </p>
       )}
 
       {activeTab === "comments" && (
@@ -424,135 +438,5 @@ function ActionButtons() {
         </button>
       </div>
     </div>
-  );
-}
-
-function Seasons() {
-  const episodes = [
-    {
-      id: 1,
-      title: "Episode 1",
-      image:
-        "https://image.tmdb.org/t/p/original/t4FC3XOQTGF66JnotzXpNsBnZSH.jpg",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      duration: "1h 30m",
-    },
-    {
-      id: 2,
-      title: "Episode 2",
-      image:
-        "https://image.tmdb.org/t/p/original/t4FC3XOQTGF66JnotzXpNsBnZSH.jpg",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      duration: "1h 30m",
-    },
-    {
-      id: 3,
-      title: "Episode 3",
-      image:
-        "https://image.tmdb.org/t/p/original/t4FC3XOQTGF66JnotzXpNsBnZSH.jpg",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      duration: "1h 30m",
-    },
-    {
-      id: 4,
-      title: "Episode 4",
-      image:
-        "https://image.tmdb.org/t/p/original/t4FC3XOQTGF66JnotzXpNsBnZSH.jpg",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      duration: "1h 30m",
-    },
-    {
-      id: 5,
-      title: "Episode 5",
-      image:
-        "https://image.tmdb.org/t/p/original/t4FC3XOQTGF66JnotzXpNsBnZSH.jpg",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      duration: "1h 30m",
-    },
-    {
-      id: 6,
-      title: "Episode 6",
-      image:
-        "https://image.tmdb.org/t/p/original/t4FC3XOQTGF66JnotzXpNsBnZSH.jpg",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      duration: "1h 30m",
-    },
-    {
-      id: 7,
-      title: "Episode 7",
-      image:
-        "https://image.tmdb.org/t/p/original/t4FC3XOQTGF66JnotzXpNsBnZSH.jpg",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      duration: "1h 30m",
-    },
-    {
-      id: 8,
-      title: "Episode 8",
-      image:
-        "https://image.tmdb.org/t/p/original/t4FC3XOQTGF66JnotzXpNsBnZSH.jpg",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      duration: "1h 30m",
-    },
-  ];
-
-  return (
-    <section>
-      {/* Episodes Section */}
-      <div className="mt-6 px-4">
-        <div className="flex justify-between items-center mb-3">
-          <h3 className="text-white font-bold text-sm">
-            Season 1 · 8 Episodes
-          </h3>
-          <button className="text-yellow-500">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </button>
-        </div>
-
-        <div className="flex overflow-x-auto space-x-3 pb-4 hide-scrollbar">
-          {episodes.map((episode, index) => (
-            <div key={index} className="flex-shrink-0 w-32 relative">
-              <div className="relative">
-                <img
-                  src={episode.image}
-                  alt={`Episode ${index + 1}`}
-                  className="w-32 h-20 object-cover rounded-md"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src =
-                      "https://via.placeholder.com/128x72?text=Episode";
-                  }}
-                />
-                {/* <p>{episode.title}</p> */}
-                <div className="absolute bottom-1 left-1 text-xs text-white bg-black/70 px-1 rounded">
-                  {episode.duration}
-                </div>
-              </div>
-              <div className="mt-1 text-xs text-white">{episode.title}</div>
-            </div>
-          ))}
-        </div>
-
-        <style jsx>{`
-          .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-          }
-          .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-          }
-        `}</style>
-      </div>
-    </section>
   );
 }

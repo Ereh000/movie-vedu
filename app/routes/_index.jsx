@@ -12,20 +12,12 @@ export const meta = () => {
 };
 
 export default function Index() {
-
   return (
     <>
       <div className="home__page bg-slate-900 relative pb-8">
         <section>
-          {/* <MainBanner />
-          <MovieCards title="Now Playing" category="now_playing" />
-          <MovieCards title="Top Rated" category="top_rated" />
-          <MovieCards title="Up Comming" category="up_comming" />
-          <MovieCards title="Popular" category="popular" /> */}
-
-          {/* ------ Vedu Ui ------ */}
-          <MainBannerVedu/>
-          <CollectionListVedu/>
+          <MainBannerVedu />
+          <CollectionListVedu />
           <MovieCardsVedu title="Most Popular" />
           <MovieCardsVedu title="Latest" />
           <MovieCardsVedu title="Featured Series" />

@@ -1,13 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "@remix-run/react";
-import Logo from "../../Assets/Images/plexia-logo-png.png";
+import Logo from "../../Assets/Images/Plexia-logo-2.png";
 
 function HeaderVedu() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [prevScrollPos, setPrevScrollPos] = useState(0);
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollPos = window.scrollY;
+      setIsScrolled(currentScrollPos > 0);
+
+      // Make header visible on scroll up
+      setVisible(prevScrollPos > currentScrollPos || currentScrollPos < 10);
+      setPrevScrollPos(currentScrollPos);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [prevScrollPos]);
 
   return (
-    <section className="header-section">
-      <header className="bg-[#121212] text-white py-4 px-5">
+    <section
+      className={`header-section ${
+        isScrolled ? "fixed" : "relative"
+      }  w-full top-0 z-50 transition-all duration-300 ${
+        !visible ? "-translate-y-full" : "translate-y-0"
+      }`}
+    >
+      <header
+        className={`transition-all duration-300 ${
+          isScrolled ? "bg-[#121212]/90 backdrop-blur-sm" : "bg-black"
+        } text-white py-4 px-5`}
+      >
         <div className="container mx-auto flex items-center justify-between">
           {/* Logo and Brand */}
           <div className="flex items-center gap-2">
@@ -67,7 +94,7 @@ function HeaderVedu() {
             </button>
 
             {/* Download Icon */}
-            <button className="text-white hidden md:block">
+            <button className="text-white block">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -86,7 +113,7 @@ function HeaderVedu() {
 
             {/* Mobile Menu Button */}
             <button
-              className="md:hidden text-white"
+              className="hidden text-white"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? (
@@ -125,7 +152,11 @@ function HeaderVedu() {
         </div>
       </header>
 
-      <div className="hidden md:block bottom_menu bg-[#121212] text-white pt-0 py-4 px-5">
+      <div
+        className={`hidden md:block bottom_menu ${
+          isScrolled ? "bg-[#121212]/90 backdrop-blur-sm" : "bg-transparent"
+        } text-white pt-0 py-4 px-5`}
+      >
         <div className="nav_wrapper overflow-x-auto flex justify-between md:justify-center items-center gap-2 ">
           <div className="nav_item " style={{ color: "#f9a829" }}>
             <a href="">Series</a>

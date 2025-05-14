@@ -2,6 +2,29 @@
     --main-color: #f9a829;
     --white: #fff;
     --black: #000;
+    --golden-gradint: linear-gradient(251deg, rgb(239, 231, 184), rgb(191, 159, 68)), linear-gradient(rgb(194, 164, 75), rgb(194, 164, 75));
+    --golder-color: rgb(221, 204, 142);
+}
+
+body{
+    .btn-primary{
+        background: var(--golden-gradint) !important;
+    }
+    .episode__title{
+        color: var(--golder-color);
+    }
+    .season__ep-text{
+        color: var(--golder-color) !important;
+    }
+    .gold_color{
+        color: var(--golder-color);
+    }
+    .gold_bg{
+        background: var(--golden-gradint)!important;
+    }
+    svg{
+        color: var(--golder-color);
+    }
 }
 
 .swiper-pagination {
@@ -95,8 +118,8 @@
 
 // Seach Page ---
 
-.search_page{
-    button{
+.search_page {
+    button {
         font-size: 10px;
     }
 }
