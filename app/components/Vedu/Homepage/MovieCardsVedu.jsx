@@ -115,7 +115,7 @@ export default function MovieCardsVedu({
                         {/* {movie.language} */}
                         ADD
                       </span>
-                    </div>
+                    </div>  
                     {/* Teaser Tag */}
                     {movie.isTeaser && (
                       <div className="absolute top-2 right-2">
