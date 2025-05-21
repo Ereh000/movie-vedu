@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap");
 :root {
   --main-color: #f9a829;
   --white: #fff;
@@ -6,6 +7,16 @@
   --golder-color: rgb(221, 204, 142);
 }
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Josefin Sans", sans-serif !important;
+}
+
+body {
+  font-family: "Josefin Sans", sans-serif !important;
+}
 body .btn-primary {
   background: var(--golden-gradint) !important;
 }
@@ -18,11 +29,23 @@ body .season__ep-text {
 body .gold_color {
   color: var(--golder-color);
 }
+body .text-gold {
+  color: var(--golder-color);
+}
 body .gold_bg {
   background: var(--golden-gradint) !important;
 }
 body svg {
   color: var(--golder-color);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Josefin Sans", sans-serif !important;
 }
 
 .swiper-pagination {
@@ -37,7 +60,7 @@ body svg {
 }
 
 .swiper-pagination-bullet-active {
-  background: var(--main-color) !important;
+  background: var(--golden-gradint) !important;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
@@ -69,12 +92,7 @@ body svg {
   /* Chrome, Safari, Opera */
 }
 
-.main_veduBanner .swiper-wrapper .swiper-slide {
-  padding: 10px;
-  margin-top: 6px;
-}
 .main_veduBanner .swiper-wrapper .swiper-slide > div {
-  border-radius: 6px !important;
   overflow: hidden;
 }
 .main_veduBanner .badge_wrapper {

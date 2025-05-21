@@ -30,8 +30,10 @@ export default function MoviePreview() {
   const [playlistVideos, setPlaylistVideos] = useState([]);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [searchParams] = useSearchParams();
-  const playlistId = searchParams.get("playlist") || "x9os26"; // Example playlist ID
+  const playlistId =
+    searchParams.get("playlist") || "PLcDgcb5xDNebRw5JfSHg7KME1yVqpaUGO"; // YouTube playlist ID
   const episodeParam = searchParams.get("episode");
+  const apiKey = "AIzaSyB4DcCnc2fB7uRgRmFTwDO2Nzd4ap-9oIQ";
 
   console.log("playlistId", playlistId);
   console.log("episodeId", episodeId);
@@ -39,15 +41,28 @@ export default function MoviePreview() {
   useEffect(() => {
     const fetchPlaylistVideos = async () => {
       try {
-        // Fetch playlist videos
-        const url = `https://api.dailymotion.com/playlist/${playlistId}/videos?fields=id,title,thumbnail_url,duration`;
+        // Fetch YouTube playlist videos
+        const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=200&playlistId=${playlistId}&key=${apiKey}`;
         const response = await fetch(url);
         const data = await response.json();
-        if (data.list) {
-          setPlaylistVideos(data.list);
+        console.log("YouTube Playlist Data:", data);
+
+        if (data.items) {
+          const videos = data.items
+            .filter((item) => item.snippet.title !== "Private video")
+            .map((item) => ({
+              id: item.snippet.resourceId.videoId,
+              title: item.snippet.title,
+              thumbnail_url: item.snippet.thumbnails.medium?.url,
+              description: item.snippet.description,
+              position: item.snippet.position,
+            }));
+
+          setPlaylistVideos(videos);
+
           // Only set the first episode if no episode is specified in URL
-          if (!episodeParam && data.list.length > 0) {
-            setEpisodeId(data.list[0].id);
+          if (!episodeParam && videos.length > 0) {
+            setEpisodeId(videos[0].id);
           }
         }
       } catch (error) {
@@ -56,7 +71,7 @@ export default function MoviePreview() {
     };
 
     fetchPlaylistVideos();
-  }, [playlistId, episodeParam]);
+  }, [playlistId, episodeParam, apiKey]);
 
   // Update episodeId when the URL parameter changes
   useEffect(() => {
@@ -65,6 +80,7 @@ export default function MoviePreview() {
     }
   }, [episodeParam]);
 
+  // ... rest of the component remains the same
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       {/* Back button and top actions */}
@@ -81,7 +97,7 @@ export default function MoviePreview() {
       {activeTab === "seasons" && (
         <Seasons playlistVideos={playlistVideos} playlistId={playlistId} />
       )}
-      {activeTab === "details" && <TabContent />}
+      {activeTab === "details" && <TabContent activeTab={activeTab} />}
       {activeTab === "moreLikeThis" && <MoreLikeThis />}
       <br />
     </div>
@@ -145,7 +161,7 @@ function TopNavigation({ navigate }) {
 
 // Component for Episode Player section
 function EpisodePlayer({ episodeId }) {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
   const handlePlayClick = () => {
@@ -188,12 +204,12 @@ function EpisodePlayer({ episodeId }) {
             </div>
           )}
           <iframe
-            src={`https://geo.dailymotion.com/player.html?video=${episodeId}`}
+            src={`https://www.youtube.com/embed/${episodeId}`}
             className="absolute inset-0 w-full h-full"
             allowFullScreen
             title="Dailymotion Video Player"
             frameBorder="0"
-            allow="autoplay; fullscreen; picture-in-picture; web-share"
+            allow="autoplay"
             onLoad={() => setIsLoading(false)}
           ></iframe>
         </>
@@ -291,7 +307,9 @@ function MovieInfo({ playlistVideos, episodeId }) {
         </span>
         <div className="flex items-center">
           <span className="text-white text-xs mr-1">Rating</span>
-          <span className="text-yellow-500 text-sm font-bold gold_color">8.5</span>
+          <span className="text-yellow-500 text-sm font-bold gold_color">
+            8.5
+          </span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-4 w-4 text-yellow-500 ml-1"
