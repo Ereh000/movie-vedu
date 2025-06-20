@@ -4,6 +4,7 @@ import { Link } from "@remix-run/react";
 export default function MovieCardsVedu({
   title = "Latest",
   viewAllLink = "/movie/collection",
+  series
 }) {
   const movies = [
     {
@@ -71,11 +72,12 @@ export default function MovieCardsVedu({
     },
   ];
 
+
   return (
     <section className="py-6 px-4 bg-gray-900">
       <div className="container mx-auto">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-[1rem] md:text-2xl font-bold text-white">
+          <h2 className="text-[1rem] md:text-2xl font-bold text-gold">
             {title}
           </h2>
           <Link to={viewAllLink} className="text-white">
@@ -95,23 +97,23 @@ export default function MovieCardsVedu({
             </svg>
           </Link>
         </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          {movies.map((movie) => (
-            <div key={movie.id} className="relative">
+ 
+        <div className="flex gap-[10px] overflow-x-auto">
+          {series?.map((movie) => (
+            <div key={movie.id} className="relative movie_card">
               {movie.isAd ? (
                 // Ad Card
                 // Regular Movie Card
                 <Link to={movie.link} className="block">
-                  <div className="relative">
-                    <img
+                  <div className="relative movie_car">
+                    <img 
                       src={movie.adImage}
                       alt={movie.title}
                       className="w-full object-cover aspect-[2/3] rounded-lg overflow-hidden"
                     />
                     {/* Language Tag */}
                     <div className="absolute top-2 left-2">
-                      <span className="bg-yellow-500 text-black px-2 py-0.5 text-xs font-medium rounded">
+                      <span className="gold_bg text-black px-2 py-0.5 text-xs font-medium rounded">
                         {/* {movie.language} */}
                         ADD
                       </span>
@@ -119,7 +121,7 @@ export default function MovieCardsVedu({
                     {/* Teaser Tag */}
                     {movie.isTeaser && (
                       <div className="absolute top-2 right-2">
-                        <span className="bg-red-600 text-white px-2 py-0.5 text-xs font-medium rounded">
+                        <span className="bg-red-600 text-gold px-2 py-0.5 text-xs font-medium rounded">
                           TEASER
                         </span>
                       </div>
@@ -143,17 +145,17 @@ export default function MovieCardsVedu({
                 </Link>
               ) : (
                 // Regular Movie Card
-                <Link to={movie.link} className="block">
+                <Link to={`/movie/preview?playlist=${movie.id}`} className="block">
                   <div className="relative">
                     <img
                       src={movie.image}
                       alt={movie.title}
-                      className="w-full object-cover aspect-[2/3] rounded-lg overflow-hidden"
+                      className="w-full object-cover aspect-[2/3] rounded-[4px] overflow-hidden"
                     />
                     {/* Language Tag */}
                     <div className="absolute top-2 left-2">
-                      <span className="bg-yellow-500 text-black px-2 py-0.5 text-xs font-medium rounded">
-                        {movie.language}
+                      <span className="gold_bg text-black px-2 py-0.5 text-xs font-medium rounded">
+                        {movie.language} 
                       </span>
                     </div>
                     {/* Teaser Tag */}
@@ -166,18 +168,18 @@ export default function MovieCardsVedu({
                     )}
                     {/* Movie Info */}
                     <div className="bottom-0 left-0 right-0 pt-2">
-                      <h3 className="text-white font-medium text-[12px] mb-1 line-clamp-2">
+                      <h3 className="text-gold font-medium text-[12px] mb-1 line-clamp-2">
                         {movie.title}
                       </h3>
-                      <p
+                      {/* <p
                         style={{ lineHeight: 1 }}
                         className="text-gray-300 text-[10px] mb-1"
                       >
                         {movie.genres.join(", ")}
-                      </p>
-                      <p className="text-yellow-500 text-[11px] font-medium">
+                      </p> */}
+                      {/* <p className="text-yellow-500 text-[11px] font-medium">
                         {movie.quality}
-                      </p>
+                      </p> */}
                     </div>
                   </div>
                 </Link>

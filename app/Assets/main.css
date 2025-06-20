@@ -5,6 +5,7 @@
   --black: #000;
   --golden-gradint: linear-gradient(251deg, rgb(239, 231, 184), rgb(191, 159, 68)), linear-gradient(rgb(194, 164, 75), rgb(194, 164, 75));
   --golder-color: rgb(221, 204, 142);
+  --bg-color: #171a21;
 }
 
 * {
@@ -46,6 +47,14 @@ h4,
 h5,
 h6 {
   font-family: "Josefin Sans", sans-serif !important;
+}
+
+.bg-gray-900 {
+  background: var(--bg-color) !important;
+}
+
+.movie_card {
+  min-width: calc(50% - 10px);
 }
 
 .swiper-pagination {
